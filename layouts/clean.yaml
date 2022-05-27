@@ -1,0 +1,12 @@
+name: Clean
+
+dir:
+  app:
+    database:
+      migration:
+      seeds:
+    domain:
+    infrastructure:
+    interfaces:
+    log:
+    usecases:
