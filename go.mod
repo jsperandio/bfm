@@ -14,7 +14,4 @@ require (
 	golang.org/x/text v0.3.6 // indirect
 )
 
-require (
-	github.com/gdamore/tcell v1.4.0
-	github.com/mattn/go-runewidth v0.0.13 // indirect
-)
+require github.com/mattn/go-runewidth v0.0.13 // indirect

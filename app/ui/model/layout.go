@@ -8,22 +8,24 @@ type Layout struct {
 }
 
 func NewLayout(fileName string) *Layout {
-	l := &Layout{
-		FileName: fileName,
-	}
+	l := &Layout{}
 
-	l.FileExt = l.getExt()
-
+	l.FileName, l.FileExt = l.explodeFileName(fileName)
 	return l
 }
 
-func (l *Layout) getExt() string {
-
-	if strings.Contains(l.FileName, ".") {
-		return strings.Split(l.FileName, ".")[1]
+func (l *Layout) explodeFileName(fn string) (string, string) {
+	if fn == "" {
+		return "", ""
 	}
 
-	return ""
+	if !strings.Contains(fn, ".") {
+		return fn, ""
+	}
+
+	strs := strings.Split(fn, ".")
+
+	return strs[0], strs[1]
 }
 
 func (l *Layout) ToListItem() *ListItem {

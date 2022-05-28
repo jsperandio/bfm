@@ -10,15 +10,17 @@ import (
 const (
 	projectMenuTitle = "New Project"
 	projectMenuName  = "NewProjectMenu"
-	// removed B for back option
+	// removed [B] for back option
 	keyboardRunes = "qwertyuiopasdfghjklzxcvnm"
 )
 
 type projectMenu struct {
 	*tview.List
-	page  *tview.Pages
-	name  string
-	items map[string]*model.ListItem
+	page           *tview.Pages
+	name           string
+	items          map[string]*model.ListItem
+	layouts        []model.Layout
+	selectedLayout int
 }
 
 func NewProjectMenu() (Menu, error) {
@@ -35,11 +37,31 @@ func NewProjectMenu() (Menu, error) {
 	}
 
 	for k, v := range pm.items {
-		pm.AddItem(k, v.Description, v.Short, v.Selected)
+		pm.AddItem(k, v.Description, v.Short, pm.selectLayout)
 	}
 	pm.addBackItem()
 
 	return pm, nil
+}
+
+func (pm *projectMenu) loadItems() error {
+
+	layouts, err := pm.getLayoutList()
+	if err != nil {
+		return err
+	}
+
+	pm.layouts = layouts
+	pm.items = make(map[string]*model.ListItem)
+
+	for i, l := range layouts {
+		li := l.ToListItem()
+		li.Short = rune(keyboardRunes[i])
+		li.Selected = pm.selectLayout
+		pm.items[l.FileName] = li
+	}
+
+	return nil
 }
 
 func (pm *projectMenu) addBackItem() {
@@ -57,22 +79,26 @@ func (pm *projectMenu) addBackItem() {
 	pm.AddItem(pm.items["Back"].Text, pm.items["Back"].Description, pm.items["Back"].Short, pm.items["Back"].Selected)
 }
 
-func (pm *projectMenu) loadItems() error {
+func (pm *projectMenu) selectLayout() {
 
-	layouts, err := pm.getLayoutList()
-	if err != nil {
-		return err
+	// can this go wrong???
+
+	pm.selectedLayout = pm.GetCurrentItem()
+
+	pm.page.SwitchToPage(paramFormName)
+
+	pgname, fp := pm.page.GetFrontPage()
+	if pgname != paramFormName {
+		return
 	}
 
-	pm.items = make(map[string]*model.ListItem)
-
-	for i, l := range layouts {
-		li := l.ToListItem()
-		li.Short = rune(keyboardRunes[i])
-		pm.items[l.FileName] = li
+	pf, ok := fp.(*paramForm)
+	if !ok {
+		return
 	}
 
-	return nil
+	pf.SetLayout(pm.layouts[pm.selectedLayout])
+
 }
 
 func (pm *projectMenu) getLayoutList() ([]model.Layout, error) {
