@@ -14,22 +14,23 @@ const (
 	keyboardRunes = "qwertyuiopasdfghjklzxcvnm"
 )
 
-type projectMenu struct {
+type ProjectMenu struct {
 	*tview.List
 	page           *tview.Pages
 	name           string
 	items          map[string]*model.ListItem
-	layouts        []model.Layout
-	selectedLayout int
+	Layouts        []*model.Layout
+	SelectedLayout int
 }
 
 func NewProjectMenu() (Menu, error) {
-	pm := &projectMenu{
+	pm := &ProjectMenu{
 		List: tview.NewList(),
 		name: projectMenuName,
 	}
 
 	pm.SetTitle(projectMenuTitle).SetBorder(true)
+	pm.SetBorderPadding(1, 0, 2, 0)
 
 	err := pm.loadItems()
 	if err != nil {
@@ -44,14 +45,14 @@ func NewProjectMenu() (Menu, error) {
 	return pm, nil
 }
 
-func (pm *projectMenu) loadItems() error {
+func (pm *ProjectMenu) loadItems() error {
 
 	layouts, err := pm.getLayoutList()
 	if err != nil {
 		return err
 	}
 
-	pm.layouts = layouts
+	pm.Layouts = layouts
 	pm.items = make(map[string]*model.ListItem)
 
 	for i, l := range layouts {
@@ -64,7 +65,7 @@ func (pm *projectMenu) loadItems() error {
 	return nil
 }
 
-func (pm *projectMenu) addBackItem() {
+func (pm *ProjectMenu) addBackItem() {
 
 	pm.items["Back"] = &model.ListItem{
 		Index:       len(pm.items),
@@ -79,11 +80,11 @@ func (pm *projectMenu) addBackItem() {
 	pm.AddItem(pm.items["Back"].Text, pm.items["Back"].Description, pm.items["Back"].Short, pm.items["Back"].Selected)
 }
 
-func (pm *projectMenu) selectLayout() {
+func (pm *ProjectMenu) selectLayout() {
 
 	// can this go wrong???
 
-	pm.selectedLayout = pm.GetCurrentItem()
+	pm.SelectedLayout = pm.GetCurrentItem()
 
 	pm.page.SwitchToPage(paramFormName)
 
@@ -97,33 +98,33 @@ func (pm *projectMenu) selectLayout() {
 		return
 	}
 
-	pf.SetLayout(pm.layouts[pm.selectedLayout])
+	pf.SetLayout(pm.Layouts[pm.SelectedLayout])
 
 }
 
-func (pm *projectMenu) getLayoutList() ([]model.Layout, error) {
+func (pm *ProjectMenu) getLayoutList() ([]*model.Layout, error) {
 	files, err := ioutil.ReadDir("./layouts")
 	if err != nil {
 		return nil, err
 	}
 
-	var layouts []model.Layout
+	var layouts []*model.Layout
 	for _, f := range files {
-		layouts = append(layouts, *model.NewLayout(f.Name()))
+		layouts = append(layouts, model.NewLayout(f.Name()))
 	}
 
 	return layouts, nil
 }
 
-func (pm *projectMenu) GetName() string {
+func (pm *ProjectMenu) GetName() string {
 	return pm.name
 }
 
-func (pm *projectMenu) StickyToPage(page *tview.Pages) {
+func (pm *ProjectMenu) StickyToPage(page *tview.Pages) {
 	pm.page = page
 }
 
-func (pm *projectMenu) UpdateItem(itemToUpdate string, item model.ListItem) {
+func (pm *ProjectMenu) UpdateItem(itemToUpdate string, item model.ListItem) {
 	rmvItem := pm.items[itemToUpdate]
 	pm.RemoveItem(rmvItem.Index)
 	pm.items[itemToUpdate] = &item

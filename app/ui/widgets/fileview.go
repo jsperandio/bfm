@@ -7,8 +7,11 @@ import (
 	"github.com/rivo/tview"
 )
 
+const fileViewName = "FileView"
+
 type FileView struct {
 	*tview.TextView
+	name     string
 	fileName string
 	path     string
 }
@@ -35,7 +38,12 @@ func NewFileView(fn string, path string) (*FileView, error) {
 	}
 
 	fv.SetBorder(true).SetTitle(fv.fileName)
+	fv.SetBorderPadding(1, 0, 2, 0)
 	fv.SetText(string(f))
 
 	return fv, nil
+}
+
+func (fv *FileView) GetName() string {
+	return fileViewName
 }

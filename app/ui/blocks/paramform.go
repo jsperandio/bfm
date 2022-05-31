@@ -12,7 +12,7 @@ type paramForm struct {
 	*tview.Form
 	name   string
 	pages  *tview.Pages
-	layout model.Layout
+	layout *model.Layout
 }
 
 type ParamForm interface {
@@ -21,7 +21,7 @@ type ParamForm interface {
 	GetName() string
 }
 
-func NewParamForm(sl model.Layout) ParamForm {
+func NewParamForm(sl *model.Layout) ParamForm {
 
 	pf := &paramForm{
 		Form:   tview.NewForm(),
@@ -68,7 +68,7 @@ func (pf *paramForm) cancelAction() {
 	pf.pages.SwitchToPage(projectMenuName)
 }
 
-func (pf *paramForm) SetLayout(l model.Layout) {
+func (pf *paramForm) SetLayout(l *model.Layout) {
 	pf.layout = l
 	pf.updateTitle()
 }

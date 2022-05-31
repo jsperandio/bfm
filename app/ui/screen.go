@@ -13,13 +13,16 @@ type Screen struct {
 	newProjectMenu blocks.Menu
 	paramForm      blocks.ParamForm
 	menuPages      *tview.Pages
-	infoView       *widgets.FileView
+	textView       *widgets.FileView
+	layoutView     *widgets.LayoutView
+	viewPages      *tview.Pages
 }
 
 func NewScreen() *Screen {
 	scrn := Screen{
 		Application: tview.NewApplication(),
 		menuPages:   tview.NewPages(),
+		viewPages:   tview.NewPages(),
 	}
 
 	// Start Main Menu
@@ -33,22 +36,30 @@ func NewScreen() *Screen {
 	}
 	scrn.newProjectMenu = pm
 
+	// Start Param Form
+	form := blocks.NewParamForm(&model.Layout{})
+	form.StickyToPage(scrn.menuPages)
+	scrn.paramForm = form
+
+	// Add Menu Flow Pages
+	scrn.addMenuPage(scrn.mainMenu.GetName(), scrn.mainMenu, true, true)
+	scrn.addMenuPage(scrn.newProjectMenu.GetName(), scrn.newProjectMenu, true, false)
+	scrn.menuPages.AddPage(scrn.paramForm.GetName(), form, true, false)
+
 	// Start Viewer
 	iv, err := widgets.NewFileView("README.md", "./")
 	if err != nil {
 		panic(err)
 	}
-	scrn.infoView = iv
+	scrn.textView = iv
 
-	// Start Param Form
-	form := blocks.NewParamForm(model.Layout{})
-	form.StickyToPage(scrn.menuPages)
-	scrn.paramForm = form
+	// Start Layout View
+	lt := widgets.NewLayoutView()
+	scrn.layoutView = lt
 
-	// Add Flow Pages
-	scrn.addMenuPage(scrn.mainMenu.GetName(), scrn.mainMenu, true, false)
-	scrn.addMenuPage(scrn.newProjectMenu.GetName(), scrn.newProjectMenu, true, false)
-	scrn.menuPages.AddPage(scrn.paramForm.GetName(), form, true, true)
+	// Add View Flow Pages
+	scrn.viewPages.AddPage(scrn.textView.GetName(), scrn.textView, true, true)
+	scrn.viewPages.AddPage(scrn.layoutView.GetName(), scrn.layoutView, true, false)
 
 	return &scrn
 }
@@ -57,14 +68,13 @@ func (s *Screen) addMenuPage(name string, menu blocks.Menu, resize bool, visible
 
 	menu.StickyToPage(s.menuPages)
 	s.menuPages.AddPage(name, menu, resize, visible)
-
 }
 
 func (s *Screen) Render() error {
 
 	flex := tview.NewFlex().
 		AddItem(s.menuPages, 0, 3, true).
-		AddItem(s.infoView, 0, 4, false)
+		AddItem(s.viewPages, 0, 4, false)
 
 	err := s.SetRoot(flex, true).EnableMouse(false).Run()
 

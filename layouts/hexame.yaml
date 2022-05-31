@@ -1,5 +1,4 @@
 name: Hexame
-
 dir:
   app:
     domain:
@@ -20,8 +19,3 @@ dir:
     serverless:
   configs:
   deployments:
-
-
-
-
-    

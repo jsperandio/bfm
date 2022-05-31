@@ -24,6 +24,7 @@ func NewMainMenu() Menu {
 	}
 
 	mm.SetTitle(mainMenuTitle).SetBorder(true)
+	mm.SetBorderPadding(1, 0, 2, 0)
 
 	mm.items = map[string]*model.ListItem{
 		"New Project": {
