@@ -2,6 +2,7 @@ package block
 
 import (
 	"github.com/jsperandio/bfm/app/ui/constant"
+	"github.com/jsperandio/bfm/app/ui/converter"
 	"github.com/jsperandio/bfm/app/ui/model"
 	"github.com/rivo/tview"
 )
@@ -53,7 +54,7 @@ func NewMainMenu(r *model.Refers) Block {
 }
 
 func (mm *mainMenu) menuPages() *tview.Pages {
-	return mm.references.Get("menuPages").AsPages()
+	return converter.AsPages(mm.references.Get("menuPages"))
 }
 
 func (mm *mainMenu) GetName() string {

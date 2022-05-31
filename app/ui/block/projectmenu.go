@@ -4,7 +4,9 @@ import (
 	"io/ioutil"
 
 	"github.com/jsperandio/bfm/app/ui/constant"
+	"github.com/jsperandio/bfm/app/ui/converter"
 	"github.com/jsperandio/bfm/app/ui/model"
+	"github.com/jsperandio/bfm/app/ui/widget"
 	"github.com/rivo/tview"
 )
 
@@ -83,6 +85,9 @@ func (pm *ProjectMenu) selectLayoutEvent() {
 	pm.selectedLayout = pm.GetCurrentItem()
 
 	pm.menuPages().SwitchToPage(constant.ParamFormName)
+
+	pm.viewPages().SwitchToPage(constant.LayoutViewName)
+
 	pgname, fp := pm.menuPages().GetFrontPage()
 	if pgname != constant.ParamFormName {
 		return
@@ -92,8 +97,8 @@ func (pm *ProjectMenu) selectLayoutEvent() {
 	if !ok {
 		return
 	}
-
 	pf.SetLayout(pm.layouts[pm.selectedLayout])
+	pm.layoutView().RenderLayout(pm.layouts[pm.selectedLayout])
 }
 
 func (pm *ProjectMenu) getLayoutList() ([]*model.Layout, error) {
@@ -111,7 +116,21 @@ func (pm *ProjectMenu) getLayoutList() ([]*model.Layout, error) {
 }
 
 func (pm *ProjectMenu) menuPages() *tview.Pages {
-	return pm.references.Get("menuPages").AsPages()
+	return converter.AsPages(pm.references.Get("menuPages"))
+}
+
+func (pm *ProjectMenu) viewPages() *tview.Pages {
+	return converter.AsPages(pm.references.Get("viewPages"))
+}
+
+func (pm *ProjectMenu) layoutView() *widget.LayoutView {
+
+	lv := pm.references.Get("layoutView")
+	if lv == nil {
+		return nil
+	}
+
+	return converter.AsLayoutView(lv)
 }
 
 func (pm *ProjectMenu) GetName() string {

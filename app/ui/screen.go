@@ -25,6 +25,21 @@ func NewScreen() *Screen {
 		viewPages:   tview.NewPages(),
 	}
 
+	// Start Viewer
+	iv, err := widget.NewFileView("README.md", "./")
+	if err != nil {
+		panic(err)
+	}
+	scrn.textView = iv
+
+	// Start Layout View
+	lt := widget.NewLayoutView()
+	scrn.layoutView = lt
+
+	// Add View Flow Pages
+	scrn.viewPages.AddPage(scrn.textView.GetName(), scrn.textView, true, true)
+	scrn.viewPages.AddPage(scrn.layoutView.GetName(), scrn.layoutView, true, false)
+
 	// Start Main Menu
 	rfrs := model.NewRefers()
 	rfrs.Add("menuPages", scrn.menuPages)
@@ -33,6 +48,9 @@ func NewScreen() *Screen {
 	scrn.mainMenu = mn
 
 	// Start New Project Menu
+	rfrs.Add("viewPages", scrn.viewPages)
+	rfrs.Add("layoutView", scrn.layoutView)
+
 	pm, err := block.NewProjectMenu(rfrs)
 	if err != nil {
 		panic(err)
@@ -48,21 +66,6 @@ func NewScreen() *Screen {
 	scrn.menuPages.AddPage(scrn.mainMenu.GetName(), scrn.mainMenu, true, true)
 	scrn.menuPages.AddPage(scrn.newProjectMenu.GetName(), scrn.newProjectMenu, true, false)
 	scrn.menuPages.AddPage(scrn.paramForm.GetName(), form, true, false)
-
-	// Start Viewer
-	iv, err := widget.NewFileView("README.md", "./")
-	if err != nil {
-		panic(err)
-	}
-	scrn.textView = iv
-
-	// Start Layout View
-	lt := widget.NewLayoutView()
-	scrn.layoutView = lt
-
-	// Add View Flow Pages
-	scrn.viewPages.AddPage(scrn.textView.GetName(), scrn.textView, true, true)
-	scrn.viewPages.AddPage(scrn.layoutView.GetName(), scrn.layoutView, true, false)
 
 	return &scrn
 }

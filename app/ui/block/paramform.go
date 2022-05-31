@@ -3,6 +3,7 @@ package block
 import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/jsperandio/bfm/app/ui/constant"
+	"github.com/jsperandio/bfm/app/ui/converter"
 	"github.com/jsperandio/bfm/app/ui/model"
 	"github.com/rivo/tview"
 )
@@ -64,9 +65,10 @@ func (pf *paramForm) updateTitle() {
 }
 
 func (pf *paramForm) cancelAction() {
+	pf.SetFocus(0)
 	pf.menuPages().SwitchToPage(constant.ProjectMenuName)
 }
 
 func (pf *paramForm) menuPages() *tview.Pages {
-	return pf.references.Get("menuPages").AsPages()
+	return converter.AsPages(pf.references.Get("menuPages"))
 }
