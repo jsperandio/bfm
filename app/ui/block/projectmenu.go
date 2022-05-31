@@ -1,4 +1,4 @@
-package blocks
+package block
 
 import (
 	"io/ioutil"
@@ -16,17 +16,18 @@ const (
 
 type ProjectMenu struct {
 	*tview.List
-	page           *tview.Pages
 	name           string
 	items          map[string]*model.ListItem
-	Layouts        []*model.Layout
-	SelectedLayout int
+	layouts        []*model.Layout
+	selectedLayout int
+	references     *model.Refers
 }
 
-func NewProjectMenu() (Menu, error) {
+func NewProjectMenu(r *model.Refers) (Menu, error) {
 	pm := &ProjectMenu{
-		List: tview.NewList(),
-		name: projectMenuName,
+		List:       tview.NewList(),
+		name:       projectMenuName,
+		references: r,
 	}
 
 	pm.SetTitle(projectMenuTitle).SetBorder(true)
@@ -38,7 +39,7 @@ func NewProjectMenu() (Menu, error) {
 	}
 
 	for k, v := range pm.items {
-		pm.AddItem(k, v.Description, v.Short, pm.selectLayout)
+		pm.AddItem(k, v.Description, v.Short, pm.selectLayoutEvent)
 	}
 	pm.addBackItem()
 
@@ -52,13 +53,13 @@ func (pm *ProjectMenu) loadItems() error {
 		return err
 	}
 
-	pm.Layouts = layouts
+	pm.layouts = layouts
 	pm.items = make(map[string]*model.ListItem)
 
 	for i, l := range layouts {
 		li := l.ToListItem()
 		li.Short = rune(keyboardRunes[i])
-		li.Selected = pm.selectLayout
+		li.Selected = pm.selectLayoutEvent
 		pm.items[l.FileName] = li
 	}
 
@@ -73,22 +74,20 @@ func (pm *ProjectMenu) addBackItem() {
 		Description: "Go back to the main menu",
 		Short:       'b',
 		Selected: func() {
-			pm.page.SwitchToPage(mainMenuName)
+			pm.menuPages().SwitchToPage(mainMenuName)
 		},
 	}
 
 	pm.AddItem(pm.items["Back"].Text, pm.items["Back"].Description, pm.items["Back"].Short, pm.items["Back"].Selected)
 }
 
-func (pm *ProjectMenu) selectLayout() {
+func (pm *ProjectMenu) selectLayoutEvent() {
 
 	// can this go wrong???
+	pm.selectedLayout = pm.GetCurrentItem()
 
-	pm.SelectedLayout = pm.GetCurrentItem()
-
-	pm.page.SwitchToPage(paramFormName)
-
-	pgname, fp := pm.page.GetFrontPage()
+	pm.menuPages().SwitchToPage(paramFormName)
+	pgname, fp := pm.menuPages().GetFrontPage()
 	if pgname != paramFormName {
 		return
 	}
@@ -98,8 +97,7 @@ func (pm *ProjectMenu) selectLayout() {
 		return
 	}
 
-	pf.SetLayout(pm.Layouts[pm.SelectedLayout])
-
+	pf.SetLayout(pm.layouts[pm.selectedLayout])
 }
 
 func (pm *ProjectMenu) getLayoutList() ([]*model.Layout, error) {
@@ -116,12 +114,19 @@ func (pm *ProjectMenu) getLayoutList() ([]*model.Layout, error) {
 	return layouts, nil
 }
 
+func (pm *ProjectMenu) menuPages() *tview.Pages {
+	return pm.references.Get("menuPages").AsPages()
+}
+
 func (pm *ProjectMenu) GetName() string {
 	return pm.name
 }
 
+func (pm *ProjectMenu) SetRefers(r *model.Refers) {
+	pm.references = r
+}
+
 func (pm *ProjectMenu) StickyToPage(page *tview.Pages) {
-	pm.page = page
 }
 
 func (pm *ProjectMenu) UpdateItem(itemToUpdate string, item model.ListItem) {

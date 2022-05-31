@@ -1,4 +1,4 @@
-package blocks
+package block
 
 import (
 	"github.com/gdamore/tcell/v2"

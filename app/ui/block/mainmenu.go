@@ -1,4 +1,4 @@
-package blocks
+package block
 
 import (
 	"github.com/jsperandio/bfm/app/ui/model"
@@ -12,15 +12,16 @@ const (
 
 type mainMenu struct {
 	*tview.List
-	name  string
-	items map[string]*model.ListItem
-	page  *tview.Pages
+	name       string
+	items      map[string]*model.ListItem
+	references *model.Refers
 }
 
-func NewMainMenu() Menu {
+func NewMainMenu(r *model.Refers) Menu {
 	mm := &mainMenu{
-		List: tview.NewList(),
-		name: mainMenuName,
+		List:       tview.NewList(),
+		name:       mainMenuName,
+		references: r,
 	}
 
 	mm.SetTitle(mainMenuTitle).SetBorder(true)
@@ -33,7 +34,10 @@ func NewMainMenu() Menu {
 			Description: "Build a new project for you",
 			Short:       'n',
 			Selected: func() {
-				mm.page.SwitchToPage(projectMenuName)
+				page := mm.menuPages()
+				if page != nil {
+					page.SwitchToPage(projectMenuName)
+				}
 			},
 		},
 		"Edit layouts": {
@@ -52,12 +56,19 @@ func NewMainMenu() Menu {
 	return mm
 }
 
+func (mm *mainMenu) menuPages() *tview.Pages {
+	return mm.references.Get("menuPages").AsPages()
+}
+
 func (mm *mainMenu) GetName() string {
 	return mm.name
 }
 
+func (mm *mainMenu) SetRefers(r *model.Refers) {
+	mm.references = r
+}
+
 func (mm *mainMenu) StickyToPage(page *tview.Pages) {
-	mm.page = page
 }
 
 func (mm *mainMenu) UpdateItem(itemToUpdate string, item model.ListItem) {
