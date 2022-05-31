@@ -4,10 +4,9 @@ import (
 	"errors"
 	"io/ioutil"
 
+	"github.com/jsperandio/bfm/app/ui/constant"
 	"github.com/rivo/tview"
 )
-
-const fileViewName = "FileView"
 
 type FileView struct {
 	*tview.TextView
@@ -35,6 +34,7 @@ func NewFileView(fn string, path string) (*FileView, error) {
 		TextView: tview.NewTextView(),
 		fileName: fn,
 		path:     path,
+		name:     constant.FileViewName,
 	}
 
 	fv.SetBorder(true).SetTitle(fv.fileName)
@@ -45,5 +45,5 @@ func NewFileView(fn string, path string) (*FileView, error) {
 }
 
 func (fv *FileView) GetName() string {
-	return fileViewName
+	return fv.name
 }

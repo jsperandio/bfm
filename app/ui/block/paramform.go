@@ -2,11 +2,10 @@ package block
 
 import (
 	"github.com/gdamore/tcell/v2"
+	"github.com/jsperandio/bfm/app/ui/constant"
 	"github.com/jsperandio/bfm/app/ui/model"
 	"github.com/rivo/tview"
 )
-
-const paramFormName = "ParamForm"
 
 type paramForm struct {
 	*tview.Form
@@ -25,7 +24,7 @@ func NewParamForm(sl *model.Layout) ParamForm {
 
 	pf := &paramForm{
 		Form:   tview.NewForm(),
-		name:   paramFormName,
+		name:   constant.ParamFormName,
 		layout: sl,
 	}
 
@@ -65,7 +64,7 @@ func (pf *paramForm) updateTitle() {
 }
 
 func (pf *paramForm) cancelAction() {
-	pf.pages.SwitchToPage(projectMenuName)
+	pf.pages.SwitchToPage(constant.ProjectMenuName)
 }
 
 func (pf *paramForm) SetLayout(l *model.Layout) {

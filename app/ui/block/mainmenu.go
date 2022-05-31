@@ -1,14 +1,12 @@
 package block
 
 import (
+	"github.com/jsperandio/bfm/app/ui/constant"
 	"github.com/jsperandio/bfm/app/ui/model"
 	"github.com/rivo/tview"
 )
 
-const (
-	mainMenuTitle = "BFM - Build for Me - v1.0"
-	mainMenuName  = "MainMenu"
-)
+const ()
 
 type mainMenu struct {
 	*tview.List
@@ -20,11 +18,11 @@ type mainMenu struct {
 func NewMainMenu(r *model.Refers) Menu {
 	mm := &mainMenu{
 		List:       tview.NewList(),
-		name:       mainMenuName,
+		name:       constant.MainMenuName,
 		references: r,
 	}
 
-	mm.SetTitle(mainMenuTitle).SetBorder(true)
+	mm.SetTitle(constant.MainMenuTitle).SetBorder(true)
 	mm.SetBorderPadding(1, 0, 2, 0)
 
 	mm.items = map[string]*model.ListItem{
@@ -36,7 +34,7 @@ func NewMainMenu(r *model.Refers) Menu {
 			Selected: func() {
 				page := mm.menuPages()
 				if page != nil {
-					page.SwitchToPage(projectMenuName)
+					page.SwitchToPage(constant.ProjectMenuName)
 				}
 			},
 		},
@@ -66,9 +64,6 @@ func (mm *mainMenu) GetName() string {
 
 func (mm *mainMenu) SetRefers(r *model.Refers) {
 	mm.references = r
-}
-
-func (mm *mainMenu) StickyToPage(page *tview.Pages) {
 }
 
 func (mm *mainMenu) UpdateItem(itemToUpdate string, item model.ListItem) {

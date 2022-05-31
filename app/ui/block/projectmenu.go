@@ -3,16 +3,12 @@ package block
 import (
 	"io/ioutil"
 
+	"github.com/jsperandio/bfm/app/ui/constant"
 	"github.com/jsperandio/bfm/app/ui/model"
 	"github.com/rivo/tview"
 )
 
-const (
-	projectMenuTitle = "New Project"
-	projectMenuName  = "NewProjectMenu"
-	// removed [B] for back option
-	keyboardRunes = "qwertyuiopasdfghjklzxcvnm"
-)
+const ()
 
 type ProjectMenu struct {
 	*tview.List
@@ -26,11 +22,11 @@ type ProjectMenu struct {
 func NewProjectMenu(r *model.Refers) (Menu, error) {
 	pm := &ProjectMenu{
 		List:       tview.NewList(),
-		name:       projectMenuName,
+		name:       constant.ProjectMenuName,
 		references: r,
 	}
 
-	pm.SetTitle(projectMenuTitle).SetBorder(true)
+	pm.SetTitle(constant.ProjectMenuTitle).SetBorder(true)
 	pm.SetBorderPadding(1, 0, 2, 0)
 
 	err := pm.loadItems()
@@ -58,7 +54,7 @@ func (pm *ProjectMenu) loadItems() error {
 
 	for i, l := range layouts {
 		li := l.ToListItem()
-		li.Short = rune(keyboardRunes[i])
+		li.Short = rune(constant.KeyboardRunes[i])
 		li.Selected = pm.selectLayoutEvent
 		pm.items[l.FileName] = li
 	}
@@ -74,7 +70,7 @@ func (pm *ProjectMenu) addBackItem() {
 		Description: "Go back to the main menu",
 		Short:       'b',
 		Selected: func() {
-			pm.menuPages().SwitchToPage(mainMenuName)
+			pm.menuPages().SwitchToPage(constant.MainMenuName)
 		},
 	}
 
@@ -86,9 +82,9 @@ func (pm *ProjectMenu) selectLayoutEvent() {
 	// can this go wrong???
 	pm.selectedLayout = pm.GetCurrentItem()
 
-	pm.menuPages().SwitchToPage(paramFormName)
+	pm.menuPages().SwitchToPage(constant.ParamFormName)
 	pgname, fp := pm.menuPages().GetFrontPage()
-	if pgname != paramFormName {
+	if pgname != constant.ParamFormName {
 		return
 	}
 
@@ -124,9 +120,6 @@ func (pm *ProjectMenu) GetName() string {
 
 func (pm *ProjectMenu) SetRefers(r *model.Refers) {
 	pm.references = r
-}
-
-func (pm *ProjectMenu) StickyToPage(page *tview.Pages) {
 }
 
 func (pm *ProjectMenu) UpdateItem(itemToUpdate string, item model.ListItem) {

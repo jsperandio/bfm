@@ -2,11 +2,10 @@ package widget
 
 import (
 	"github.com/gdamore/tcell/v2"
+	"github.com/jsperandio/bfm/app/ui/constant"
 	"github.com/jsperandio/bfm/app/ui/model"
 	"github.com/rivo/tview"
 )
-
-const layoutViewName = "LayoutView"
 
 type LayoutView struct {
 	*tview.TreeView
@@ -17,6 +16,7 @@ func NewLayoutView() *LayoutView {
 
 	lt := &LayoutView{
 		TreeView: tview.NewTreeView(),
+		name:     constant.LayoutViewName,
 	}
 
 	lt.SetBorder(true).SetTitle("Layout Tree")
