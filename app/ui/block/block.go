@@ -5,10 +5,8 @@ import (
 	"github.com/rivo/tview"
 )
 
-type Menu interface {
+type Block interface {
 	tview.Primitive
 	GetName() string
 	SetRefers(r *model.Refers)
-	// StickyToPage(page *tview.Pages)
-	// UpdateItem(itemToUpdate string, item model.ListItem)
 }

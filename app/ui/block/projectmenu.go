@@ -19,7 +19,7 @@ type ProjectMenu struct {
 	references     *model.Refers
 }
 
-func NewProjectMenu(r *model.Refers) (Menu, error) {
+func NewProjectMenu(r *model.Refers) (Block, error) {
 	pm := &ProjectMenu{
 		List:       tview.NewList(),
 		name:       constant.ProjectMenuName,

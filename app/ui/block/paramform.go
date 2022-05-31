@@ -9,23 +9,18 @@ import (
 
 type paramForm struct {
 	*tview.Form
-	name   string
-	pages  *tview.Pages
-	layout *model.Layout
+	name       string
+	layout     *model.Layout
+	references *model.Refers
 }
 
-type ParamForm interface {
-	tview.Primitive
-	StickyToPage(page *tview.Pages)
-	GetName() string
-}
-
-func NewParamForm(sl *model.Layout) ParamForm {
+func NewParamForm(r *model.Refers, sl *model.Layout) Block {
 
 	pf := &paramForm{
-		Form:   tview.NewForm(),
-		name:   constant.ParamFormName,
-		layout: sl,
+		Form:       tview.NewForm(),
+		name:       constant.ParamFormName,
+		layout:     sl,
+		references: r,
 	}
 
 	pf.AddInputField("Initial path", "/documents/repository", 30, nil, nil).
@@ -42,12 +37,17 @@ func NewParamForm(sl *model.Layout) ParamForm {
 	return pf
 }
 
-func (pf *paramForm) StickyToPage(page *tview.Pages) {
-	pf.pages = page
-}
-
 func (pf *paramForm) GetName() string {
 	return pf.name
+}
+
+func (pf *paramForm) SetRefers(r *model.Refers) {
+	pf.references = r
+}
+
+func (pf *paramForm) SetLayout(l *model.Layout) {
+	pf.layout = l
+	pf.updateTitle()
 }
 
 func (pf *paramForm) customStyles() {
@@ -64,10 +64,9 @@ func (pf *paramForm) updateTitle() {
 }
 
 func (pf *paramForm) cancelAction() {
-	pf.pages.SwitchToPage(constant.ProjectMenuName)
+	pf.menuPages().SwitchToPage(constant.ProjectMenuName)
 }
 
-func (pf *paramForm) SetLayout(l *model.Layout) {
-	pf.layout = l
-	pf.updateTitle()
+func (pf *paramForm) menuPages() *tview.Pages {
+	return pf.references.Get("menuPages").AsPages()
 }

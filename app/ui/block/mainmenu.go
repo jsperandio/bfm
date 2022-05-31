@@ -6,8 +6,6 @@ import (
 	"github.com/rivo/tview"
 )
 
-const ()
-
 type mainMenu struct {
 	*tview.List
 	name       string
@@ -15,7 +13,7 @@ type mainMenu struct {
 	references *model.Refers
 }
 
-func NewMainMenu(r *model.Refers) Menu {
+func NewMainMenu(r *model.Refers) Block {
 	mm := &mainMenu{
 		List:       tview.NewList(),
 		name:       constant.MainMenuName,

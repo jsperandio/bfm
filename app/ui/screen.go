@@ -9,9 +9,9 @@ import (
 
 type Screen struct {
 	*tview.Application
-	mainMenu       block.Menu
-	newProjectMenu block.Menu
-	paramForm      block.ParamForm
+	mainMenu       block.Block
+	newProjectMenu block.Block
+	paramForm      block.Block
 	menuPages      *tview.Pages
 	textView       *widget.FileView
 	layoutView     *widget.LayoutView
@@ -40,8 +40,8 @@ func NewScreen() *Screen {
 	scrn.newProjectMenu = pm
 
 	// Start Param Form
-	form := block.NewParamForm(&model.Layout{})
-	form.StickyToPage(scrn.menuPages)
+	form := block.NewParamForm(rfrs, &model.Layout{})
+	// form.StickyToPage(scrn.menuPages)
 	scrn.paramForm = form
 
 	// Add Menu Flow Pages
