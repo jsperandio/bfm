@@ -38,7 +38,7 @@ func NewFileView(fn string, path string) (*FileView, error) {
 	}
 
 	fv.SetBorder(true).SetTitle(fv.fileName)
-	fv.SetBorderPadding(1, 0, 2, 0)
+	fv.SetBorderPadding(1, 0, 2, 2)
 	fv.SetText(string(f))
 
 	return fv, nil

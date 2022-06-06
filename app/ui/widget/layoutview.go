@@ -1,8 +1,6 @@
 package widget
 
 import (
-	"log"
-
 	"github.com/gdamore/tcell/v2"
 	"github.com/jsperandio/bfm/app/ui/constant"
 	"github.com/jsperandio/bfm/app/ui/model"
@@ -31,7 +29,6 @@ func NewLayoutView() *LayoutView {
 func (lt *LayoutView) RenderLayout(lyt *model.Layout) {
 
 	if lyt == nil {
-		log.Println("[INFO] LayoutView.RenderLayout: layout is nil")
 		return
 	}
 	node := tview.NewTreeNode(lyt.Name())
@@ -42,7 +39,9 @@ func (lt *LayoutView) RenderLayout(lyt *model.Layout) {
 }
 
 func (lt *LayoutView) nodeDive(node *tview.TreeNode, value interface{}) {
+
 	switch vl := value.(type) {
+
 	case map[string]interface{}:
 		for k, v := range vl {
 			n := tview.NewTreeNode(k)

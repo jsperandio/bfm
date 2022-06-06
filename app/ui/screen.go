@@ -77,7 +77,6 @@ func (s *Screen) Render() error {
 		AddItem(s.viewPages, 0, 4, false)
 
 	err := s.SetRoot(flex, true).EnableMouse(false).Run()
-
 	if err != nil {
 		return err
 	}
