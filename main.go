@@ -7,6 +7,7 @@ import (
 func main() {
 
 	mainScreen := ui.NewScreen()
+
 	mainScreen.Render()
 
 }
