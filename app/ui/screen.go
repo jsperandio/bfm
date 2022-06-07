@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/jsperandio/bfm/app/domain/service"
 	"github.com/jsperandio/bfm/app/ui/block"
 	"github.com/jsperandio/bfm/app/ui/model"
 	"github.com/jsperandio/bfm/app/ui/widget"
@@ -18,7 +19,7 @@ type Screen struct {
 	viewPages      *tview.Pages
 }
 
-func NewScreen() *Screen {
+func NewScreen(maker service.ProjectMaker) *Screen {
 	scrn := Screen{
 		Application: tview.NewApplication(),
 		menuPages:   tview.NewPages(),
@@ -58,7 +59,7 @@ func NewScreen() *Screen {
 	scrn.newProjectMenu = pm
 
 	// Start Param Form
-	form := block.NewParamForm(rfrs, &model.Layout{})
+	form := block.NewParamForm(rfrs, &model.Layout{}, maker)
 	// form.StickyToPage(scrn.menuPages)
 	scrn.paramForm = form
 

@@ -1,13 +1,15 @@
 package main
 
 import (
+	"github.com/jsperandio/bfm/app/domain/service"
 	"github.com/jsperandio/bfm/app/ui"
 )
 
 func main() {
 
-	mainScreen := ui.NewScreen()
+	mk := service.NewProjectMaker()
 
+	mainScreen := ui.NewScreen(mk)
 	mainScreen.Render()
 
 }

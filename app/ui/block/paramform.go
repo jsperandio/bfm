@@ -1,10 +1,10 @@
 package block
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/gdamore/tcell/v2"
+	"github.com/jsperandio/bfm/app/domain/service"
 	"github.com/jsperandio/bfm/app/ui/constant"
 	"github.com/jsperandio/bfm/app/ui/constant/label"
 	"github.com/jsperandio/bfm/app/ui/converter"
@@ -17,15 +17,17 @@ type paramForm struct {
 	name       string
 	layout     *model.Layout
 	references *model.Refers
+	maker      service.ProjectMaker
 }
 
-func NewParamForm(r *model.Refers, sl *model.Layout) Block {
+func NewParamForm(r *model.Refers, l *model.Layout, pm service.ProjectMaker) Block {
 
 	pf := &paramForm{
 		Form:       tview.NewForm(),
 		name:       constant.ParamFormName,
-		layout:     sl,
+		layout:     l,
 		references: r,
+		maker:      pm,
 	}
 
 	pf.newInitialPathField()
@@ -136,7 +138,7 @@ func (pf *paramForm) cancelAction() {
 
 func (pf *paramForm) startAction() {
 
-	np := model.Project{
+	np := &model.Project{
 		RootPath:        pf.getFormItemValueByLabel(label.InputFieldInitialPath),
 		GitPlatform:     pf.getFormItemValueByLabel(label.DropDownGitPlatform),
 		GitUser:         pf.getFormItemValueByLabel(label.InputFieldGitUser),
@@ -145,8 +147,10 @@ func (pf *paramForm) startAction() {
 		RememberChoices: pf.getFormItemValueByLabel(label.CheckboxRememberChoices),
 	}
 
-	fmt.Printf("np: %v\n", np)
-
+	err := pf.maker.Make(pf.layout, np)
+	if err != nil {
+		return
+	}
 }
 
 func (pf *paramForm) menuPages() *tview.Pages {

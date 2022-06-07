@@ -1,25 +1,63 @@
 package service
 
 import (
+	"errors"
+	"fmt"
+	"os"
+
 	"github.com/jsperandio/bfm/app/domain/model"
 	uimodel "github.com/jsperandio/bfm/app/ui/model"
 )
 
 type ProjectMaker interface {
-	MakeLayout(layout *uimodel.Layout) error
+	Make(layout *uimodel.Layout, prjct *uimodel.Project) error
 }
 
 type projectMaker struct {
-	project *model.Project
 }
 
-func NewProjectMaker(uiprjct uimodel.Project) ProjectMaker {
-	return &projectMaker{
-		project: model.NewProjectFromUI(&uiprjct),
+func NewProjectMaker() ProjectMaker {
+	return &projectMaker{}
+}
+
+func (pm projectMaker) Make(layout *uimodel.Layout, prjct *uimodel.Project) error {
+
+	if layout == nil {
+		return errors.New("layout is nil")
 	}
-}
 
-func (d *projectMaker) MakeLayout(layout *uimodel.Layout) error {
+	if prjct == nil {
+		return errors.New("project is nil")
+	}
+
+	project := model.NewProjectFromUI(prjct)
+	layoutDir := model.NewLayoutDirFromUI(layout)
+
+	for _, p := range layoutDir.DirectPaths() {
+
+		if fp := pm.buildPath(*project, p); fp != "" {
+
+			err := os.MkdirAll(fp, os.ModePerm)
+			if err != nil {
+				return fmt.Errorf("failed to create directory %s: %s", fp, err)
+			}
+
+		}
+	}
 
 	return nil
+}
+
+func (pm projectMaker) buildPath(p model.Project, lytPath string) string {
+
+	if p.RootPath == "" {
+		return ""
+	}
+
+	// remove last slash if it exists
+	if p.RootPath[len(p.RootPath)-1] == '/' {
+		p.RootPath = p.RootPath[:len(p.RootPath)-1]
+	}
+
+	return fmt.Sprintf("%s/%s/%s", p.RootPath, p.Name, lytPath)
 }

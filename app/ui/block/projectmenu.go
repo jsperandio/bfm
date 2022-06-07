@@ -12,7 +12,7 @@ import (
 
 const ()
 
-type ProjectMenu struct {
+type projectMenu struct {
 	*tview.List
 	name           string
 	items          map[string]*model.ListItem
@@ -22,7 +22,7 @@ type ProjectMenu struct {
 }
 
 func NewProjectMenu(r *model.Refers) (Block, error) {
-	pm := &ProjectMenu{
+	pm := &projectMenu{
 		List:       tview.NewList(),
 		name:       constant.ProjectMenuName,
 		references: r,
@@ -44,7 +44,7 @@ func NewProjectMenu(r *model.Refers) (Block, error) {
 	return pm, nil
 }
 
-func (pm *ProjectMenu) loadItems() error {
+func (pm *projectMenu) loadItems() error {
 
 	layouts, err := pm.getLayoutList()
 	if err != nil {
@@ -64,7 +64,7 @@ func (pm *ProjectMenu) loadItems() error {
 	return nil
 }
 
-func (pm *ProjectMenu) addBackItem() {
+func (pm *projectMenu) addBackItem() {
 
 	pm.items["Back"] = &model.ListItem{
 		Index:       len(pm.items),
@@ -79,7 +79,7 @@ func (pm *ProjectMenu) addBackItem() {
 	pm.AddItem(pm.items["Back"].Text, pm.items["Back"].Description, pm.items["Back"].Short, pm.items["Back"].Selected)
 }
 
-func (pm *ProjectMenu) selectLayoutEvent() {
+func (pm *projectMenu) selectLayoutEvent() {
 
 	// can this go wrong???
 	pm.selectedLayout = pm.GetCurrentItem()
@@ -101,7 +101,7 @@ func (pm *ProjectMenu) selectLayoutEvent() {
 	pm.layoutView().RenderLayout(pm.layouts[pm.selectedLayout])
 }
 
-func (pm *ProjectMenu) getLayoutList() ([]*model.Layout, error) {
+func (pm *projectMenu) getLayoutList() ([]*model.Layout, error) {
 	files, err := ioutil.ReadDir("./layouts")
 	if err != nil {
 		return nil, err
@@ -115,15 +115,15 @@ func (pm *ProjectMenu) getLayoutList() ([]*model.Layout, error) {
 	return layouts, nil
 }
 
-func (pm *ProjectMenu) menuPages() *tview.Pages {
+func (pm *projectMenu) menuPages() *tview.Pages {
 	return converter.AsPages(pm.references.Get("menuPages"))
 }
 
-func (pm *ProjectMenu) viewPages() *tview.Pages {
+func (pm *projectMenu) viewPages() *tview.Pages {
 	return converter.AsPages(pm.references.Get("viewPages"))
 }
 
-func (pm *ProjectMenu) layoutView() *widget.LayoutView {
+func (pm *projectMenu) layoutView() *widget.LayoutView {
 
 	lv := pm.references.Get("layoutView")
 	if lv == nil {
@@ -133,15 +133,15 @@ func (pm *ProjectMenu) layoutView() *widget.LayoutView {
 	return converter.AsLayoutView(lv)
 }
 
-func (pm *ProjectMenu) GetName() string {
+func (pm *projectMenu) GetName() string {
 	return pm.name
 }
 
-func (pm *ProjectMenu) SetRefers(r *model.Refers) {
+func (pm *projectMenu) SetRefers(r *model.Refers) {
 	pm.references = r
 }
 
-func (pm *ProjectMenu) UpdateItem(itemToUpdate string, item model.ListItem) {
+func (pm *projectMenu) UpdateItem(itemToUpdate string, item model.ListItem) {
 	rmvItem := pm.items[itemToUpdate]
 	pm.RemoveItem(rmvItem.Index)
 	pm.items[itemToUpdate] = &item

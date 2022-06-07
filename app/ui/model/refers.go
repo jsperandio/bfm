@@ -1,7 +1,5 @@
 package model
 
-import "log"
-
 type Refers struct {
 	Items map[string]interface{}
 }
@@ -21,6 +19,5 @@ func (r *Refers) Get(name string) interface{} {
 	if v, ok := r.Items[name]; ok {
 		return v
 	}
-	log.Print("[ERROR] Refers.Get: no such item: ", name)
 	return nil
 }
