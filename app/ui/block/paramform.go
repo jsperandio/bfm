@@ -31,10 +31,12 @@ func NewParamForm(r *model.Refers, l *model.Layout, pm service.ProjectMaker) Blo
 	}
 
 	pf.newInitialPathField()
-	pf.newGitPlatformField()
-	pf.newGitUserField()
 	pf.newProjectNameField()
+
 	pf.newRunGoModField()
+	// pf.newGitPlatformField()
+	// pf.newGitUserField()
+
 	pf.newRememberChoicesField()
 	pf.newStartButton()
 	pf.newCancelButton()
@@ -58,7 +60,7 @@ func (pf *paramForm) SetLayout(l *model.Layout) {
 }
 
 func (pf *paramForm) newInitialPathField() {
-	pf.AddInputField(label.InputFieldInitialPath, "/documents/repository", 0, nil, nil)
+	pf.AddInputField(label.InputFieldInitialPath, "./documents/repository", 30, nil, nil)
 }
 
 func (pf *paramForm) newGitPlatformField() {
@@ -70,11 +72,11 @@ func (pf *paramForm) newGitUserField() {
 }
 
 func (pf *paramForm) newProjectNameField() {
-	pf.AddInputField(label.InputFieldProjectName, "", 0, nil, nil)
+	pf.AddInputField(label.InputFieldProjectName, "", 30, nil, nil)
 }
 
 func (pf *paramForm) newRunGoModField() {
-	pf.AddCheckbox(label.CheckboxRunGoMod, true, nil)
+	pf.AddCheckbox(label.CheckboxRunGoMod, false, pf.toggleGoMod)
 }
 
 func (pf *paramForm) newRememberChoicesField() {
@@ -130,6 +132,19 @@ func (pf *paramForm) getFormItemValueByLabel(label string) (value string) {
 	return value
 }
 
+func (pf *paramForm) toggleGoMod(checked bool) {
+	// remove git options if go mod is not run
+	if !checked {
+		pf.RemoveFormItem(pf.GetFormItemIndex(label.InputFieldGitUser))
+		pf.RemoveFormItem(pf.GetFormItemIndex(label.DropDownGitPlatform))
+	} else {
+		pf.newGitPlatformField()
+		pf.newGitUserField()
+	}
+
+	pf.RemoveFormItem(pf.GetFormItemIndex(label.CheckboxRememberChoices))
+	pf.newRememberChoicesField()
+}
 func (pf *paramForm) cancelAction() {
 	pf.SetFocus(0)
 	pf.menuPages().SwitchToPage(constant.ProjectMenuName)
