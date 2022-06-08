@@ -37,7 +37,7 @@ func NewProjectMenu(r *model.Refers) (Block, error) {
 	}
 
 	for k, v := range pm.items {
-		pm.AddItem(k, v.Description, v.Short, pm.selectLayoutEvent)
+		pm.InsertItem(v.Index, k, v.Description, v.Short, v.Selected)
 	}
 	pm.addBackItem()
 
@@ -56,6 +56,7 @@ func (pm *projectMenu) loadItems() error {
 
 	for i, l := range layouts {
 		li := l.ToListItem()
+		li.Index = i
 		li.Short = rune(constant.KeyboardRunes[i])
 		li.Selected = pm.selectLayoutEvent
 		pm.items[l.FileName] = li
@@ -102,6 +103,7 @@ func (pm *projectMenu) selectLayoutEvent() {
 }
 
 func (pm *projectMenu) getLayoutList() ([]*model.Layout, error) {
+
 	files, err := ioutil.ReadDir("./layouts")
 	if err != nil {
 		return nil, err
@@ -139,11 +141,4 @@ func (pm *projectMenu) GetName() string {
 
 func (pm *projectMenu) SetRefers(r *model.Refers) {
 	pm.references = r
-}
-
-func (pm *projectMenu) UpdateItem(itemToUpdate string, item model.ListItem) {
-	rmvItem := pm.items[itemToUpdate]
-	pm.RemoveItem(rmvItem.Index)
-	pm.items[itemToUpdate] = &item
-	pm.AddItem(item.Text, item.Description, item.Short, item.Selected)
 }

@@ -12,6 +12,7 @@ type LayoutDir struct {
 
 func NewLayoutDirFromUI(lyt *ui.Layout) *LayoutDir {
 
+	var ld *LayoutDir = &LayoutDir{}
 	//string all maps to path notation in the file system
 	//so we need to convert it to the path notation in the file system
 
@@ -20,13 +21,11 @@ func NewLayoutDirFromUI(lyt *ui.Layout) *LayoutDir {
 		return nil
 	}
 
-	ld := &LayoutDir{}
+	endPaths := &[]string{}
+	walkPath := &[]string{}
 
-	endpaths := &[]string{}
-	fsPaths := &[]string{}
-
-	ld.recPathBuild(fsPaths, initPath, endpaths)
-	ld.fullpaths = *endpaths
+	ld.recPathBuild(walkPath, initPath, endPaths)
+	ld.fullpaths = *endPaths
 
 	return ld
 }

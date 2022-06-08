@@ -47,8 +47,10 @@ func NewMainMenu(r *model.Refers) Block {
 	}
 
 	for _, v := range mm.items {
-		mm.AddItem(v.Text, v.Description, v.Short, v.Selected)
+		mm.InsertItem(v.Index, v.Text, v.Description, v.Short, v.Selected)
 	}
+
+	mm.SetCurrentItem(0)
 
 	return mm
 }
@@ -63,11 +65,4 @@ func (mm *mainMenu) GetName() string {
 
 func (mm *mainMenu) SetRefers(r *model.Refers) {
 	mm.references = r
-}
-
-func (mm *mainMenu) UpdateItem(itemToUpdate string, item model.ListItem) {
-	rmvItem := mm.items[itemToUpdate]
-	mm.RemoveItem(rmvItem.Index)
-	mm.items[itemToUpdate] = &item
-	mm.AddItem(item.Text, item.Description, item.Short, item.Selected)
 }

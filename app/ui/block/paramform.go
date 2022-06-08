@@ -34,8 +34,6 @@ func NewParamForm(r *model.Refers, l *model.Layout, pm service.ProjectMaker) Blo
 	pf.newProjectNameField()
 
 	pf.newRunGoModField()
-	// pf.newGitPlatformField()
-	// pf.newGitUserField()
 
 	pf.newRememberChoicesField()
 	pf.newStartButton()
