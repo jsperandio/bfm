@@ -14,11 +14,11 @@ type mainMenu struct {
 	references *model.Refers
 }
 
-func NewMainMenu(r *model.Refers) Block {
+func NewMainMenu(rfs *model.Refers) Block {
 	mm := &mainMenu{
 		List:       tview.NewList(),
 		name:       constant.MainMenuName,
-		references: r,
+		references: rfs,
 	}
 
 	mm.SetTitle(constant.MainMenuTitle).SetBorder(true)
