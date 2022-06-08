@@ -19,7 +19,7 @@ type Screen struct {
 	viewPages      *tview.Pages
 }
 
-func NewScreen(maker service.ProjectMaker) *Screen {
+func NewScreen(mkr service.ProjectMaker) *Screen {
 	scrn := Screen{
 		Application: tview.NewApplication(),
 		menuPages:   tview.NewPages(),
@@ -59,7 +59,7 @@ func NewScreen(maker service.ProjectMaker) *Screen {
 	scrn.newProjectMenu = pm
 
 	// Start Param Form
-	form := block.NewParamForm(rfrs, &model.Layout{}, maker)
+	form := block.NewParamForm(rfrs, &model.Layout{}, mkr)
 	// form.StickyToPage(scrn.menuPages)
 	scrn.paramForm = form
 

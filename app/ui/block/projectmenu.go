@@ -21,11 +21,11 @@ type projectMenu struct {
 	references     *model.Refers
 }
 
-func NewProjectMenu(r *model.Refers) (Block, error) {
+func NewProjectMenu(rfs *model.Refers) (Block, error) {
 	pm := &projectMenu{
 		List:       tview.NewList(),
 		name:       constant.ProjectMenuName,
-		references: r,
+		references: rfs,
 	}
 
 	pm.SetTitle(constant.ProjectMenuTitle).SetBorder(true)

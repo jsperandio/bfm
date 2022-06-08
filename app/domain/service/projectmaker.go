@@ -20,18 +20,18 @@ func NewProjectMaker() ProjectMaker {
 	return &projectMaker{}
 }
 
-func (pm projectMaker) Make(layout *uimodel.Layout, prjct *uimodel.Project) error {
+func (pm projectMaker) Make(lyt *uimodel.Layout, pjt *uimodel.Project) error {
 
-	if layout == nil {
+	if lyt == nil {
 		return errors.New("layout is nil")
 	}
 
-	if prjct == nil {
+	if pjt == nil {
 		return errors.New("project is nil")
 	}
 
-	project := model.NewProjectFromUI(prjct)
-	layoutDir := model.NewLayoutDirFromUI(layout)
+	project := model.NewProjectFromUI(pjt)
+	layoutDir := model.NewLayoutDirFromUI(lyt)
 
 	for _, p := range layoutDir.DirectPaths() {
 
@@ -48,7 +48,7 @@ func (pm projectMaker) Make(layout *uimodel.Layout, prjct *uimodel.Project) erro
 	return nil
 }
 
-func (pm projectMaker) buildPath(p model.Project, lytPath string) string {
+func (pm projectMaker) buildPath(p model.Project, lytPth string) string {
 
 	if p.RootPath == "" {
 		return ""
@@ -59,5 +59,5 @@ func (pm projectMaker) buildPath(p model.Project, lytPath string) string {
 		p.RootPath = p.RootPath[:len(p.RootPath)-1]
 	}
 
-	return fmt.Sprintf("%s/%s/%s", p.RootPath, p.Name, lytPath)
+	return fmt.Sprintf("%s/%s/%s", p.RootPath, p.Name, lytPth)
 }

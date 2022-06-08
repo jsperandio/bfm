@@ -7,9 +7,9 @@ import (
 	"github.com/rivo/tview"
 )
 
-func AsPages(value interface{}) *tview.Pages {
+func AsPages(vl interface{}) *tview.Pages {
 
-	pg, ok := value.(*tview.Pages)
+	pg, ok := vl.(*tview.Pages)
 	if ok {
 		return pg
 	}
@@ -18,9 +18,9 @@ func AsPages(value interface{}) *tview.Pages {
 	return nil
 }
 
-func AsTreeView(value interface{}) *tview.TreeView {
+func AsTreeView(vl interface{}) *tview.TreeView {
 
-	tv, ok := value.(*tview.TreeView)
+	tv, ok := vl.(*tview.TreeView)
 	if ok {
 		return tv
 	}
@@ -29,9 +29,9 @@ func AsTreeView(value interface{}) *tview.TreeView {
 	return nil
 }
 
-func AsLayoutView(value interface{}) *widget.LayoutView {
+func AsLayoutView(vl interface{}) *widget.LayoutView {
 
-	lt, ok := value.(*widget.LayoutView)
+	lt, ok := vl.(*widget.LayoutView)
 	if ok {
 		return lt
 	}

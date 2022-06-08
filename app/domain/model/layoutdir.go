@@ -30,18 +30,18 @@ func NewLayoutDirFromUI(lyt *ui.Layout) *LayoutDir {
 	return ld
 }
 
-func (ld *LayoutDir) recPathBuild(paths *[]string, value interface{}, endPaths *[]string) {
+func (ld *LayoutDir) recPathBuild(pth *[]string, vl interface{}, ep *[]string) {
 
-	switch vl := value.(type) {
+	switch vl := vl.(type) {
 
 	case map[string]interface{}:
 		for k, v := range vl {
-			*paths = append(*paths, k)
-			ld.recPathBuild(paths, v, endPaths)
-			*paths = (*paths)[:len(*paths)-1]
+			*pth = append(*pth, k)
+			ld.recPathBuild(pth, v, ep)
+			*pth = (*pth)[:len(*pth)-1]
 		}
 	case nil:
-		*endPaths = append(*endPaths, strings.Join(*paths, "/"))
+		*ep = append(*ep, strings.Join(*pth, "/"))
 	}
 }
 

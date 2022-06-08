@@ -38,19 +38,19 @@ func (lt *LayoutView) RenderLayout(lyt *model.Layout) {
 	lt.nodeDive(node, lyt.Structure["dir"])
 }
 
-func (lt *LayoutView) nodeDive(node *tview.TreeNode, value interface{}) {
+func (lt *LayoutView) nodeDive(nd *tview.TreeNode, vl interface{}) {
 
-	switch vl := value.(type) {
+	switch vl := vl.(type) {
 
 	case map[string]interface{}:
 		for k, v := range vl {
 			n := tview.NewTreeNode(k)
-			node.AddChild(n)
+			nd.AddChild(n)
 			lt.nodeDive(n, v)
 		}
 	case string:
 		n := tview.NewTreeNode(vl)
-		node.AddChild(n)
+		nd.AddChild(n)
 	}
 }
 

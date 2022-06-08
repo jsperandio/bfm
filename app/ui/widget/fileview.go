@@ -15,17 +15,17 @@ type FileView struct {
 	path     string
 }
 
-func NewFileView(fn string, path string) (*FileView, error) {
+func NewFileView(fn string, pth string) (*FileView, error) {
 	if fn == "" {
 		return nil, errors.New("File name is empty")
 	}
 
-	if path == "" {
+	if pth == "" {
 		return nil, errors.New("Path is empty")
 	}
 
 	// open file from disk
-	f, err := ioutil.ReadFile(path + fn)
+	f, err := ioutil.ReadFile(pth + fn)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func NewFileView(fn string, path string) (*FileView, error) {
 	fv := &FileView{
 		TextView: tview.NewTextView(),
 		fileName: fn,
-		path:     path,
+		path:     pth,
 		name:     constant.FileViewName,
 	}
 

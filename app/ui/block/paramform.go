@@ -20,13 +20,13 @@ type paramForm struct {
 	maker      service.ProjectMaker
 }
 
-func NewParamForm(r *model.Refers, l *model.Layout, pm service.ProjectMaker) Block {
+func NewParamForm(rfs *model.Refers, lyt *model.Layout, pm service.ProjectMaker) Block {
 
 	pf := &paramForm{
 		Form:       tview.NewForm(),
 		name:       constant.ParamFormName,
-		layout:     l,
-		references: r,
+		layout:     lyt,
+		references: rfs,
 		maker:      pm,
 	}
 
@@ -102,9 +102,9 @@ func (pf *paramForm) updateTitle() {
 	pf.SetTitle("Start " + pf.layout.FileName + " Layout")
 }
 
-func (pf *paramForm) getFormItemValueByLabel(label string) (value string) {
+func (pf *paramForm) getFormItemValueByLabel(lb string) (value string) {
 
-	fi := pf.GetFormItemByLabel(label)
+	fi := pf.GetFormItemByLabel(lb)
 
 	switch fi.(type) {
 
@@ -130,9 +130,9 @@ func (pf *paramForm) getFormItemValueByLabel(label string) (value string) {
 	return value
 }
 
-func (pf *paramForm) toggleGoMod(checked bool) {
+func (pf *paramForm) toggleGoMod(chk bool) {
 	// remove git options if go mod is not run
-	if !checked {
+	if !chk {
 		pf.RemoveFormItem(pf.GetFormItemIndex(label.InputFieldGitUser))
 		pf.RemoveFormItem(pf.GetFormItemIndex(label.DropDownGitPlatform))
 	} else {

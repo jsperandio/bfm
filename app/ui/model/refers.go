@@ -10,9 +10,9 @@ func NewRefers() *Refers {
 	}
 }
 
-func (r *Refers) Add(name string, widget interface{}) interface{} {
-	r.Items[name] = widget
-	return &widget
+func (r *Refers) Add(name string, wgt interface{}) interface{} {
+	r.Items[name] = wgt
+	return &wgt
 }
 
 func (r *Refers) Get(name string) interface{} {
