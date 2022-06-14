@@ -2,6 +2,7 @@ package block
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/jsperandio/bfm/app/domain/service"
@@ -9,25 +10,27 @@ import (
 	"github.com/jsperandio/bfm/app/ui/constant/label"
 	"github.com/jsperandio/bfm/app/ui/converter"
 	"github.com/jsperandio/bfm/app/ui/model"
+	"github.com/jsperandio/bfm/app/ui/widget"
 	"github.com/rivo/tview"
+	"golang.org/x/sync/errgroup"
 )
 
 type paramForm struct {
 	*tview.Form
-	name       string
-	layout     *model.Layout
-	references *model.Refers
-	maker      service.ProjectMaker
+	name         string
+	layout       *model.Layout
+	references   *model.Refers
+	projectMaker service.ProjectMaker
 }
 
 func NewParamForm(rfs *model.Refers, lyt *model.Layout, pm service.ProjectMaker) Block {
 
 	pf := &paramForm{
-		Form:       tview.NewForm(),
-		name:       constant.ParamFormName,
-		layout:     lyt,
-		references: rfs,
-		maker:      pm,
+		Form:         tview.NewForm(),
+		name:         constant.ParamFormName,
+		layout:       lyt,
+		references:   rfs,
+		projectMaker: pm,
 	}
 
 	pf.newInitialPathField()
@@ -151,6 +154,11 @@ func (pf *paramForm) cancelAction() {
 
 func (pf *paramForm) startAction() {
 
+	pf.screenLayer().SendToFront(constant.ModalProgress)
+	pf.screenLayer().ShowPage(constant.ModalProgress)
+	pf.progressMaker().SetTitle("Creating Project...")
+	pf.progressMaker().Display()
+
 	np := &model.Project{
 		RootPath:        pf.getFormItemValueByLabel(label.InputFieldInitialPath),
 		GitPlatform:     pf.getFormItemValueByLabel(label.DropDownGitPlatform),
@@ -160,10 +168,19 @@ func (pf *paramForm) startAction() {
 		RememberChoices: pf.getFormItemValueByLabel(label.CheckboxRememberChoices),
 	}
 
-	err := pf.maker.Make(pf.layout, np)
-	if err != nil {
+	errg := &errgroup.Group{}
+	errg.Go(func() error {
+		time.Sleep(time.Second * 5)
+		return pf.projectMaker.Make(pf.layout, np)
+	})
+
+	// wait for project maker to finish
+	if err := errg.Wait(); err == nil {
+		pf.screenLayer().HidePage(constant.ModalProgress)
+		pf.progressMaker().Hide()
 		return
 	}
+
 }
 
 func (pf *paramForm) menuPages() *tview.Pages {
@@ -172,4 +189,12 @@ func (pf *paramForm) menuPages() *tview.Pages {
 
 func (pf *paramForm) viewPages() *tview.Pages {
 	return converter.AsPages(pf.references.Get("viewPages"))
+}
+
+func (pf *paramForm) screenLayer() *tview.Pages {
+	return converter.AsPages(pf.references.Get("screenLayer"))
+}
+
+func (pf *paramForm) progressMaker() *widget.ProgressDialog {
+	return converter.AsProgressDialog(pf.references.Get("progressBar"))
 }

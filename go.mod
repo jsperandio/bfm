@@ -23,4 +23,7 @@ require (
 	golang.org/x/text v0.3.6 // indirect
 )
 
-require github.com/mattn/go-runewidth v0.0.13 // indirect
+require (
+	github.com/mattn/go-runewidth v0.0.13 // indirect
+	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
+)

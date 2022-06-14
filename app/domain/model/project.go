@@ -2,6 +2,7 @@ package model
 
 import (
 	"strconv"
+	"time"
 
 	ui "github.com/jsperandio/bfm/app/ui/model"
 )
@@ -21,11 +22,23 @@ func NewProjectFromUI(uip *ui.Project) *Project {
 		rgm = false
 	}
 
-	return &Project{
+	p := &Project{
 		RootPath:    uip.RootPath,
 		GitPlatform: uip.GitPlatform,
 		GitUser:     uip.GitUser,
-		Name:        uip.Name,
 		RunGoMod:    rgm,
+	}
+
+	p.SetName(uip.Name)
+
+	return p
+}
+
+// set name , if no name set generate one : awesome-project- + timestamp (seconds)
+func (p *Project) SetName(name string) {
+	if name == "" {
+		p.Name = "awesome-project_" + time.Now().Format("1504")
+	} else {
+		p.Name = name
 	}
 }

@@ -38,3 +38,13 @@ func AsLayoutView(vl interface{}) *widget.LayoutView {
 	log.Print("[WARN] converter.AsLayoutView: value is not a widget.LayoutView")
 	return nil
 }
+
+func AsProgressDialog(vl interface{}) *widget.ProgressDialog {
+
+	pd, ok := vl.(*widget.ProgressDialog)
+	if ok {
+		return pd
+	}
+	log.Print("[WARN] converter.AsProgressDialog: value is not a widget.ProgressDialog")
+	return nil
+}

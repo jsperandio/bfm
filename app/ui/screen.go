@@ -1,8 +1,11 @@
 package ui
 
 import (
+	"time"
+
 	"github.com/jsperandio/bfm/app/domain/service"
 	"github.com/jsperandio/bfm/app/ui/block"
+	"github.com/jsperandio/bfm/app/ui/constant"
 	"github.com/jsperandio/bfm/app/ui/model"
 	"github.com/jsperandio/bfm/app/ui/widget"
 	"github.com/rivo/tview"
@@ -10,6 +13,7 @@ import (
 
 type Screen struct {
 	*tview.Application
+	screenLayer    *tview.Pages
 	mainMenu       block.Block
 	newProjectMenu block.Block
 	paramForm      block.Block
@@ -17,13 +21,16 @@ type Screen struct {
 	textView       *widget.FileView
 	layoutView     *widget.LayoutView
 	viewPages      *tview.Pages
+	progressBar    *widget.ProgressDialog
 }
 
 func NewScreen(mkr service.ProjectMaker) *Screen {
 	scrn := Screen{
 		Application: tview.NewApplication(),
+		screenLayer: tview.NewPages(),
 		menuPages:   tview.NewPages(),
 		viewPages:   tview.NewPages(),
+		progressBar: widget.NewProgressDialog(),
 	}
 
 	// Start Viewer
@@ -59,8 +66,12 @@ func NewScreen(mkr service.ProjectMaker) *Screen {
 	scrn.newProjectMenu = pm
 
 	// Start Param Form
+	scrn.progressBar.SetTitle("Loading...")
+	// scrn.progressBar.Display()
+
+	rfrs.Add("screenLayer", scrn.screenLayer)
+	rfrs.Add("progressBar", scrn.progressBar)
 	form := block.NewParamForm(rfrs, &model.Layout{}, mkr)
-	// form.StickyToPage(scrn.menuPages)
 	scrn.paramForm = form
 
 	// Add Menu Flow Pages
@@ -71,13 +82,30 @@ func NewScreen(mkr service.ProjectMaker) *Screen {
 	return &scrn
 }
 
+func (s *Screen) refreshChan() {
+	tick := time.NewTicker(constant.ScreenRefreshRate)
+	for {
+		select {
+		case <-tick.C:
+
+			s.Draw()
+		}
+	}
+}
+
 func (s *Screen) Render() error {
 
 	flex := tview.NewFlex().
 		AddItem(s.menuPages, 0, 3, true).
 		AddItem(s.viewPages, 0, 4, false)
 
-	err := s.SetRoot(flex, true).EnableMouse(false).Run()
+	s.screenLayer = s.screenLayer.
+		AddPage("default", flex, true, true).
+		AddPage(constant.ModalProgress, s.progressBar, true, false)
+
+	go s.refreshChan()
+
+	err := s.SetRoot(s.screenLayer, true).EnableMouse(false).Run()
 	if err != nil {
 		return err
 	}
