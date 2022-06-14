@@ -32,6 +32,16 @@ func (pm projectMaker) Make(lyt *uimodel.Layout, pjt *uimodel.Project) error {
 	project := model.NewProjectFromUI(pjt)
 	layoutDir := model.NewLayoutDirFromUI(lyt)
 
+	err := pm.buildDirTree(layoutDir, project)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (pm projectMaker) buildDirTree(layoutDir *model.LayoutDir, project *model.Project) error {
+
 	for _, p := range layoutDir.DirectPaths() {
 
 		if fp := pm.buildPath(*project, p); fp != "" {

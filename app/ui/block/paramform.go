@@ -61,7 +61,7 @@ func (pf *paramForm) SetLayout(l *model.Layout) {
 }
 
 func (pf *paramForm) newInitialPathField() {
-	pf.AddInputField(label.InputFieldInitialPath, "./documents/repository", 30, nil, nil)
+	pf.AddInputField(label.InputFieldInitialPath, constant.ParamFormInitialPathDefaultDir, 30, nil, nil)
 }
 
 func (pf *paramForm) newGitPlatformField() {
@@ -69,7 +69,7 @@ func (pf *paramForm) newGitPlatformField() {
 }
 
 func (pf *paramForm) newGitUserField() {
-	pf.AddInputField(label.InputFieldGitUser, "johndoe", 0, nil, nil)
+	pf.AddInputField(label.InputFieldGitUser, constant.ParamFormGitUserNameDefault, 0, nil, nil)
 }
 
 func (pf *paramForm) newProjectNameField() {

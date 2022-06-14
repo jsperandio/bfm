@@ -3,20 +3,23 @@ package constant
 import "time"
 
 const (
+	// General
 	ScreenRefreshRate = time.Millisecond * 50
+	FileViewName      = "FileView"
+	LayoutViewName    = "LayoutView"
+	ModalProgress     = "ModalProgress"
 
+	// Main Menu Constants
 	MainMenuTitle = "BFM - Build for Me - v1.0"
 	MainMenuName  = "MainMenu"
 
+	// Project Menu Constants
 	ProjectMenuTitle = "New Project"
 	ProjectMenuName  = "NewProjectMenu"
-	// removed [b] for back option
-	KeyboardRunes = "qwertyuiopasdfghjklzxcvnm"
+	KeyboardRunes    = "qwertyuiopasdfghjklzxcvnm" // removed [b] for back option
 
-	ParamFormName = "ParamForm"
-
-	FileViewName   = "FileView"
-	LayoutViewName = "LayoutView"
-
-	ModalProgress = "ModalProgress"
+	// Param Form Constants
+	ParamFormName                  = "ParamForm"
+	ParamFormInitialPathDefaultDir = "./documents/repository"
+	ParamFormGitUserNameDefault    = "johndoe"
 )
