@@ -7,9 +7,9 @@ import (
 
 func main() {
 
-	mk := service.NewProjectMaker()
+	gm := service.NewGoInitializer()
+	mk := service.NewProjectMaker(gm)
 
 	mainScreen := ui.NewScreen(mk)
 	mainScreen.Render()
-
 }

@@ -45,6 +45,8 @@ func (ld *LayoutDir) recPathBuild(pth *[]string, vl interface{}, ep *[]string) {
 	}
 }
 
+// Get the full paths of the dirs in layout.
+//  Example: ["app/domain/service", "app/domain/service/mocks", ...]
 func (ld *LayoutDir) DirectPaths() []string {
 	return ld.fullpaths
 }
