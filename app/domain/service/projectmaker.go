@@ -13,8 +13,7 @@ type ProjectMaker interface {
 	Make(layout *uimodel.Layout, prjct *uimodel.Project) error
 }
 
-type projectMaker struct {
-}
+type projectMaker struct{}
 
 func NewProjectMaker() ProjectMaker {
 	return &projectMaker{}
@@ -41,10 +40,8 @@ func (pm projectMaker) Make(lyt *uimodel.Layout, pjt *uimodel.Project) error {
 			if err != nil {
 				return fmt.Errorf("failed to create directory %s: %s", fp, err)
 			}
-
 		}
 	}
-
 	return nil
 }
 

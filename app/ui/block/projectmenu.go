@@ -41,6 +41,8 @@ func NewProjectMenu(rfs *model.Refers) (Block, error) {
 	}
 	pm.addBackItem()
 
+	pm.SetCurrentItem(0)
+
 	return pm, nil
 }
 

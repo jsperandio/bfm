@@ -170,16 +170,23 @@ func (pf *paramForm) startAction() {
 
 	errg := &errgroup.Group{}
 	errg.Go(func() error {
-		time.Sleep(time.Second * 5)
-		return pf.projectMaker.Make(pf.layout, np)
+		time.Sleep(time.Second * 1)
+		err := pf.projectMaker.Make(pf.layout, np)
+		if err != nil {
+			return err
+		}
+		pf.progressMaker().Done()
+		time.Sleep(time.Second * 1)
+		return nil
 	})
 
-	// wait for project maker to finish
-	if err := errg.Wait(); err == nil {
+	go func() {
+		errg.Wait()
 		pf.screenLayer().HidePage(constant.ModalProgress)
-		pf.progressMaker().Hide()
+		pf.screenLayer().SendToBack(constant.ModalProgress)
+		pf.menuPages().SwitchToPage(constant.ProjectMenuName)
 		return
-	}
+	}()
 
 }
 

@@ -14,19 +14,21 @@ const (
 
 type ProgressDialog struct {
 	*tview.Box
-	x       int
-	y       int
-	width   int
-	height  int
-	counter int
-	display bool
+	x        int
+	y        int
+	width    int
+	height   int
+	counter  int
+	display  bool
+	barColor string
 }
 
 func NewProgressDialog() *ProgressDialog {
 	return &ProgressDialog{
-		Box:     tview.NewBox().SetBorder(true),
-		display: false,
-		height:  10,
+		Box:      tview.NewBox().SetBorder(true),
+		display:  false,
+		height:   10,
+		barColor: "darkorange",
 	}
 }
 
@@ -92,8 +94,13 @@ func (pd *ProgressDialog) tickStr(max int) string {
 		prgEndStr = prgEndStr + fmt.Sprintf("[black::]%s", prgCell)
 	}
 
-	progress := fmt.Sprintf("%s[%s::]%s%s", prgHeadStr, "darkorange", prgStr, prgEndStr)
+	progress := fmt.Sprintf("%s[%s::]%s%s", prgHeadStr, pd.barColor, prgStr, prgEndStr)
 	return progress
+}
+
+func (pd *ProgressDialog) Done() {
+	pd.barColor = "green"
+	pd.Box.SetTitle(" Done !!")
 }
 
 // InputHandler returns input handler function for this primitive
