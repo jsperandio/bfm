@@ -25,6 +25,7 @@ type Screen struct {
 }
 
 func NewScreen(mkr service.ProjectMaker) *Screen {
+
 	scrn := Screen{
 		Application: tview.NewApplication(),
 		screenLayer: tview.NewPages(),
@@ -66,9 +67,6 @@ func NewScreen(mkr service.ProjectMaker) *Screen {
 	scrn.newProjectMenu = pm
 
 	// Start Param Form
-	scrn.progressBar.SetTitle("Loading...")
-	// scrn.progressBar.Display()
-
 	rfrs.Add("screenLayer", scrn.screenLayer)
 	rfrs.Add("progressBar", scrn.progressBar)
 	form := block.NewParamForm(rfrs, &model.Layout{}, mkr)
@@ -79,7 +77,28 @@ func NewScreen(mkr service.ProjectMaker) *Screen {
 	scrn.menuPages.AddPage(scrn.newProjectMenu.GetName(), scrn.newProjectMenu, true, false)
 	scrn.menuPages.AddPage(scrn.paramForm.GetName(), form, true, false)
 
+	// Add Screen Layer Pages
+	flex := tview.NewFlex().
+		AddItem(scrn.menuPages, 0, constant.ScreenMenuProportion, true).
+		AddItem(scrn.viewPages, 0, constant.ScreenViewProportion, false)
+
+	scrn.screenLayer = scrn.screenLayer.
+		AddPage("default", flex, true, true).
+		AddPage(constant.ModalProgress, scrn.progressBar, true, false)
+
 	return &scrn
+}
+
+func (s *Screen) Render() error {
+
+	go s.refreshChan()
+
+	err := s.SetRoot(s.screenLayer, true).EnableMouse(false).Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *Screen) refreshChan() {
@@ -91,24 +110,4 @@ func (s *Screen) refreshChan() {
 			s.Draw()
 		}
 	}
-}
-
-func (s *Screen) Render() error {
-
-	flex := tview.NewFlex().
-		AddItem(s.menuPages, 0, 3, true).
-		AddItem(s.viewPages, 0, 4, false)
-
-	s.screenLayer = s.screenLayer.
-		AddPage("default", flex, true, true).
-		AddPage(constant.ModalProgress, s.progressBar, true, false)
-
-	go s.refreshChan()
-
-	err := s.SetRoot(s.screenLayer, true).EnableMouse(false).Run()
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

@@ -37,13 +37,13 @@ func NewMainMenu(rfs *model.Refers) Block {
 				}
 			},
 		},
-		"Edit layouts": {
-			Index:       1,
-			Text:        "Edit layouts",
-			Description: "Select a layout to edit",
-			Short:       'e',
-			Selected:    nil,
-		},
+		// "Edit layouts": {
+		// 	Index:       1,
+		// 	Text:        "Edit layouts",
+		// 	Description: "Select a layout to edit",
+		// 	Short:       'e',
+		// 	Selected:    nil,
+		// },
 	}
 
 	for _, v := range mm.items {

@@ -9,6 +9,9 @@ const (
 	LayoutViewName    = "LayoutView"
 	ModalProgress     = "ModalProgress"
 
+	ScreenMenuProportion = 3
+	ScreenViewProportion = 3
+
 	// Main Menu Constants
 	MainMenuTitle = "BFM - Build for Me - v1.0"
 	MainMenuName  = "MainMenu"
