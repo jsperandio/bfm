@@ -13,19 +13,21 @@ import (
 
 type Screen struct {
 	*tview.Application
-	screenLayer    *tview.Pages
+	screenLayer *tview.Pages
+
 	mainMenu       block.Block
 	newProjectMenu block.Block
 	paramForm      block.Block
-	menuPages      *tview.Pages
-	textView       *widget.FileView
-	layoutView     *widget.LayoutView
-	viewPages      *tview.Pages
-	progressBar    *widget.ProgressDialog
+
+	menuPages  *tview.Pages
+	textView   *widget.FileView
+	layoutView *widget.LayoutView
+	viewPages  *tview.Pages
+
+	progressBar *widget.ProgressDialog
 }
 
 func NewScreen(mkr service.ProjectMaker) *Screen {
-
 	scrn := Screen{
 		Application: tview.NewApplication(),
 		screenLayer: tview.NewPages(),
@@ -90,7 +92,6 @@ func NewScreen(mkr service.ProjectMaker) *Screen {
 }
 
 func (s *Screen) Render() error {
-
 	go s.refreshChan()
 
 	err := s.SetRoot(s.screenLayer, true).EnableMouse(false).Run()

@@ -18,9 +18,7 @@ type Project struct {
 }
 
 func NewProjectFromUI(uip *ui.Project) *Project {
-
-	var p = &Project{}
-
+	p := &Project{}
 	p.setRootPathFromUI(uip.RootPath)
 	p.setGitPlatformFromUI(uip.GitPlatform)
 	p.setGitUserFromUI(uip.GitUser)
@@ -61,7 +59,6 @@ func (p *Project) setNameFromUI(name string) {
 
 // Get Full project name : gitplatform/gituser_name/name
 func (p *Project) FullName() string {
-
 	if p.gitUser == "" {
 		return fmt.Sprintf("%s.com/%s", p.gitPlatform, p.Name)
 	}

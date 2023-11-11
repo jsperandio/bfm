@@ -11,16 +11,13 @@ type LayoutDir struct {
 }
 
 func NewLayoutDirFromUI(lyt *ui.Layout) *LayoutDir {
-
-	var ld *LayoutDir = &LayoutDir{}
-	//string all maps to path notation in the file system
-	//so we need to convert it to the path notation in the file system
-
+	ld := &LayoutDir{}
+	// string all maps to path notation in the file system
+	// so we need to convert it to the path notation in the file system
 	initPath, ok := lyt.Structure["dir"].(map[string]interface{})
 	if !ok {
 		return nil
 	}
-
 	endPaths := &[]string{}
 	walkPath := &[]string{}
 
@@ -31,7 +28,6 @@ func NewLayoutDirFromUI(lyt *ui.Layout) *LayoutDir {
 }
 
 func (ld *LayoutDir) recPathBuild(pth *[]string, vl interface{}, ep *[]string) {
-
 	switch vl := vl.(type) {
 
 	case map[string]interface{}:
@@ -46,7 +42,8 @@ func (ld *LayoutDir) recPathBuild(pth *[]string, vl interface{}, ep *[]string) {
 }
 
 // Get the full paths of the dirs in layout.
-//  Example: ["app/domain/service", "app/domain/service/mocks", ...]
+//
+//	Example: ["app/domain/service", "app/domain/service/mocks", ...]
 func (ld *LayoutDir) DirectPaths() []string {
 	return ld.fullpaths
 }
